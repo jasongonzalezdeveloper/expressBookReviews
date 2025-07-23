@@ -42,7 +42,7 @@ public_users.get('/title/:title',function (req, res) {
 
   const filteredBooks = Object.values(books).filter(book => book.title.toLowerCase() === title.toLowerCase());
   if (filteredBooks.length === 0) {
-    return res.status(404).json({message: "No books found for this author"});
+    return res.status(404).json({message: "No books found for this title"});
   }
   return res.status(200).send(JSON.stringify(filteredBooks,null,4));
 });
