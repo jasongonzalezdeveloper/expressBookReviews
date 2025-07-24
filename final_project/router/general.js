@@ -25,9 +25,15 @@ public_users.post("/register", (req,res) => {
   return res.status(200).json({message: "User registered successfully"});
 });
 
-// Get the book list available in the shop
+const getBooks = () => {
+  return new Promise((resolve, reject) => {
+    resolve(books);
+  });
+};
 public_users.get('/',function (req, res) {
-  return res.status(200).send(JSON.stringify(books,null,4));
+  return getBooks().then((books) => {
+    res.send(JSON.stringify(books, null, 4));
+  });
 });
 
 // Get book details based on ISBN
