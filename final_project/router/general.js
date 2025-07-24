@@ -58,15 +58,25 @@ public_users.get('/isbn/:isbn',function (req, res) {
     });
 });
   
-// Get book details based on author
+const getBooksByAuthor = (author) => {
+  return new Promise((resolve, reject) => {
+    const filteredBooks = Object.values(books).filter(book => book.author.toLowerCase() === author.toLowerCase());
+    if (filteredBooks.length > 0) {
+      resolve(filteredBooks);
+    } else {
+      reject({message: "No books found for this author"});
+    }
+  });
+};
+
 public_users.get('/author/:author',function (req, res) {
   const author = req.params.author;
 
-  const filteredBooks = Object.values(books).filter(book => book.author.toLowerCase() === author.toLowerCase());
-  if (filteredBooks.length === 0) {
-    return res.status(404).json({message: "No books found for this author"});
-  }
-  return res.status(200).send(JSON.stringify(filteredBooks,null,4));
+  getBooksByAuthor(author).then(filteredBooks => {
+    res.status(200).send(JSON.stringify(filteredBooks, null, 4));
+  }).catch(err => {
+    res.status(404).json(err);
+  });
 });
 
 // Get all books based on title
