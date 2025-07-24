@@ -36,14 +36,26 @@ public_users.get('/',function (req, res) {
   });
 });
 
+const getBookByISBN = (isbn) => {
+  return new Promise((resolve, reject) => {
+    if (books[isbn]) {
+      resolve(books[isbn]);
+    } else {
+      reject({message: "Book not found"});
+    }
+  });
+};
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
-  const id = req.params.isbn;
-  //Check if the book exists in the database 
-  if (!books[id]) {
-    return res.status(404).json({message: "Book not found"});
-  }
-  return res.status(200).send(JSON.stringify(books[id],null,4));
+  const isbn = req.params.isbn;
+
+  getBookByISBN(isbn)
+    .then(book => {
+      res.status(200).send(JSON.stringify(book, null, 4));
+    })
+    .catch(err => {
+      res.status(404).json(err);
+    });
 });
   
 // Get book details based on author
